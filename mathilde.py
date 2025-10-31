@@ -1,37 +1,21 @@
-import tkinter as tk
-from tkinter import ttk
+import streamlit as st
 
-def calculer_cout():
-    try:
-        nb_credits = int(entry_credits.get())
-        cout_unitaire = float(entry_prix_unitaire.get())
-        total = nb_credits * cout_unitaire
-        label_resultat.config(text=f"Coût total : {total:.2f} €")
-    except ValueError:
-        label_resultat.config(text="⚠️ Entrez des nombres valides.")
+st.set_page_config(page_title="Calculatrice de coût d'outil", page_icon="💰", layout="centered")
 
-# Fenêtre principale
-fenetre = tk.Tk()
-fenetre.title("Calculatrice de coût d'outil")
+st.title("💰 Calculatrice de coût d’un outil")
 
-# Prix unitaire (par défaut 10 €)
-tk.Label(fenetre, text="Prix par crédit (€) :").grid(row=0, column=0, padx=10, pady=10)
-entry_prix_unitaire = tk.Entry(fenetre)
-entry_prix_unitaire.insert(0, "10")
-entry_prix_unitaire.grid(row=0, column=1, padx=10, pady=10)
+# Prix par crédit (par défaut 10 €)
+prix_par_credit = st.number_input("Prix par crédit (€)", min_value=0.0, value=10.0, step=0.5)
 
 # Nombre de crédits
-tk.Label(fenetre, text="Nombre de crédits :").grid(row=1, column=0, padx=10, pady=10)
-entry_credits = tk.Entry(fenetre)
-entry_credits.insert(0, "1")
-entry_credits.grid(row=1, column=1, padx=10, pady=10)
+nb_credits = st.number_input("Nombre de crédits", min_value=1, value=1, step=1)
 
-# Bouton de calcul
-btn_calculer = ttk.Button(fenetre, text="Calculer", command=calculer_cout)
-btn_calculer.grid(row=2, column=0, columnspan=2, pady=10)
+# Calcul du coût total
+cout_total = nb_credits * prix_par_credit
 
-# Résultat
-label_resultat = tk.Label(fenetre, text="Coût total : 0.00 €", font=("Arial", 12, "bold"))
-label_resultat.grid(row=3, column=0, columnspan=2, pady=10)
+# Affichage
+st.markdown("---")
+st.subheader("🧮 Résultat")
+st.metric(label="Coût total", value=f"{cout_total:.2f} €")
 
-fenetre.mainloop()
+st.markdown(f"➡️ {int(nb_credits)} crédit(s) × {prix_par_credit:.2f} € = **{cout_total:.2f} €**")
